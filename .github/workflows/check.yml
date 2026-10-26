@@ -13,4 +13,5 @@ jobs:
       - run: npm test
       - run: npm run check
       - run: node scripts/compare-strategies.cjs
+      - run: node scripts/check-static.cjs
       - run: npm run build

@@ -23,6 +23,6 @@
     {id:'c3',name:'Клиент 3',title:'Начатая заявка',segment:'С3',hypotheses:['Г4'],profile:{industry:'other',role:'cfo',structure:'single',activity:'high'},note:'Финдиректор с правом подписи · осталось заполнить 2 поля'}
   ]);
   const defaults=Object.freeze({consent:true,refused:false,stopFactor:false,weeklyContacts:0,groupTopicDaysAgo:30,deliveredWithoutReaction:0,lastUnansweredDaysAgo:0,kmCapacity:true,recipientVerified:true,signingRight:false,commonNeed:true,history:true,needSignal:true,seasonWeeks:6,propensity:0.12,riskAdjustedProfit:12000,contactCost:100});
-  const policy=Object.freeze({weeklyLimit:2,groupCooldownDays:7,unansweredLimit:2,pauseDays:30,helpPauseSeconds:45,helpBacktracks:3,groupFrequency:'Одно групповое предложение на ЛПР за 2–4 недели',seasonFrequency:'Письмо и одно напоминание в окне до пика; вне окна не пишем',genericFrequency:'Не более 2 контактов в неделю на человека',helpFrequency:'Помощь не чаще 1 раза за сессию; подсказки не тратят лимит рассылок'});
+  const policy=Object.freeze({weeklyLimit:2,groupCooldownDays:7,groupMinIntervalDays:14,unansweredLimit:2,pauseDays:30,helpPauseSeconds:45,helpBacktracks:3,groupFrequency:'Одно групповое предложение на ЛПР за 2–4 недели',seasonFrequency:'Письмо и одно напоминание в окне до пика; вне окна не пишем',genericFrequency:'Не более 2 контактов в неделю на человека',helpFrequency:'Помощь не чаще 1 раза за сессию; подсказки не тратят лимит рассылок'});
   return Object.freeze({copy,options,presets,defaults,policy,prototypeLabel:'Прототип команды «Рэд флаг» · данные условные'});
 });
