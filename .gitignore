@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.vercel/
+.openai/
+node_modules/
+raw-data/
+private-reference/
+*.log
+.DS_Store
+
+dist/

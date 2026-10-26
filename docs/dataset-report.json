@@ -1,0 +1,311 @@
+{
+  "sources": {
+    "df_Uid_payment_hack.csv": {
+      "rows": 1380585,
+      "columns": [
+        "BENEFICIARY",
+        "PAYER",
+        "PAY_AMT",
+        "PAY_CNT"
+      ],
+      "missing_pct": {
+        "BENEFICIARY": 0.0,
+        "PAYER": 0.0,
+        "PAY_AMT": 0.0,
+        "PAY_CNT": 0.0
+      },
+      "unique_payers": 163363,
+      "unique_beneficiaries": 115271,
+      "amount_sum": 55991235586000.0,
+      "payment_count_sum": 24515786.0,
+      "negative_amount_rows": 0,
+      "missing_amount_rows": 0,
+      "self_payment_rows": 27406
+    },
+    "df_Fid_Uid_link_hack.csv": {
+      "rows": 12514,
+      "columns": [
+        "SYNTHETIC_F",
+        "CITY_NAME",
+        "RC_NAME",
+        "SYNTHETIC_U"
+      ],
+      "missing_pct": {
+        "SYNTHETIC_F": 0.0,
+        "CITY_NAME": 0.11,
+        "RC_NAME": 0.11,
+        "SYNTHETIC_U": 0.0
+      },
+      "unique_people": 11120,
+      "unique_companies": 12307,
+      "people_linked_to_multiple_companies": 969,
+      "max_companies_per_person": 25,
+      "duplicate_links": 0
+    },
+    "df_Uid_data_hack.csv": {
+      "rows": 85525,
+      "columns": [
+        "SYNTHETIC_U",
+        "ORG_TYPE",
+        "OKFS_NAME",
+        "COMPANY_AGE_YEARS_GRADATION",
+        "ECO_MARK_LABEL",
+        "MAINOKVED_CODE",
+        "MAINOKVED_NAME",
+        "NEGATIVEMARK",
+        "AMOUNT_WORKERS_FNS_GRADATION",
+        "AMOUNT_WORKERS_SPARK_GRADATION",
+        "CL_TYPE",
+        "CL_PRODUCT_RKO_MARK",
+        "CL_PRODUCT_GAR_MARK",
+        "CL_PRODUCT_LOA_MARK",
+        "CL_PRODUCT_LEA_MARK",
+        "CL_PRODUCT_DEP_MARK",
+        "CL_PRODUCT_ZPP_MARK",
+        "FTS_FLAG",
+        "FTS_COUNTRY_NAME",
+        "FACTORING_MARK",
+        "REVENUE_COMPANY",
+        "GROUP_ID",
+        "CITY",
+        "REGION"
+      ],
+      "missing_pct": {
+        "SYNTHETIC_U": 0.0,
+        "ORG_TYPE": 0.0,
+        "OKFS_NAME": 0.0,
+        "COMPANY_AGE_YEARS_GRADATION": 0.0,
+        "ECO_MARK_LABEL": 4.86,
+        "MAINOKVED_CODE": 0.0,
+        "MAINOKVED_NAME": 0.0,
+        "NEGATIVEMARK": 0.0,
+        "AMOUNT_WORKERS_FNS_GRADATION": 0.0,
+        "AMOUNT_WORKERS_SPARK_GRADATION": 99.8,
+        "CL_TYPE": 0.0,
+        "CL_PRODUCT_RKO_MARK": 0.0,
+        "CL_PRODUCT_GAR_MARK": 0.0,
+        "CL_PRODUCT_LOA_MARK": 0.0,
+        "CL_PRODUCT_LEA_MARK": 0.0,
+        "CL_PRODUCT_DEP_MARK": 0.0,
+        "CL_PRODUCT_ZPP_MARK": 0.0,
+        "FTS_FLAG": 0.0,
+        "FTS_COUNTRY_NAME": 90.24,
+        "FACTORING_MARK": 0.0,
+        "REVENUE_COMPANY": 0.0,
+        "GROUP_ID": 0.0,
+        "CITY": 0.0,
+        "REGION": 0.0
+      },
+      "ambiguous_group_companies": 1,
+      "unique_companies": 85514,
+      "duplicate_companies": 11,
+      "group_ids": 18091,
+      "multi_company_groups": 5228,
+      "companies_in_multi_company_groups": 72650,
+      "group_size_median": 3.0,
+      "group_size_max": 624,
+      "group_sentinel_counts": {
+        "": 0,
+        "nan": 0,
+        "0": 0,
+        "-1": 0,
+        "group_NAN": 0
+      },
+      "multi_group_share_pct": 84.96,
+      "product_value_counts": {
+        "CL_PRODUCT_RKO_MARK": {
+          "0.0": 45862,
+          "1.0": 39663
+        },
+        "CL_PRODUCT_GAR_MARK": {
+          "0.0": 82737,
+          "1.0": 2788
+        },
+        "CL_PRODUCT_LOA_MARK": {
+          "0.0": 80580,
+          "1.0": 4945
+        },
+        "CL_PRODUCT_LEA_MARK": {
+          "0.0": 70514,
+          "1.0": 15011
+        },
+        "CL_PRODUCT_DEP_MARK": {
+          "0.0": 81242,
+          "1.0": 4283
+        },
+        "CL_PRODUCT_ZPP_MARK": {
+          "0.0": 59041,
+          "1.0": 26484
+        },
+        "FACTORING_MARK": {
+          "0.0": 85312,
+          "1.0": 213
+        }
+      },
+      "agriculture_companies": 398,
+      "wholesale_companies": 16110,
+      "top_okved_sections": {
+        "46": 16110,
+        "68": 15980,
+        "41": 5966,
+        "56": 5193,
+        "71": 4035,
+        "62": 3492,
+        "45": 2661,
+        "47": 2623,
+        "70": 2545,
+        "52": 2150
+      }
+    },
+    "Uid_data.csv": {
+      "rows": 668454,
+      "columns": [
+        "SYNTETIC_U",
+        "ORG_TYPE",
+        "OKFS_NAME",
+        "OGRN_DATE",
+        "ECO_MARK_LABEL",
+        "MAINOKVED_CODE",
+        "MAINOKVED_NAME",
+        "NEGATIVEMARK_49",
+        "AMOUNT_WORKERS_SPARK",
+        "AMOUNT_WORKERS_FNS",
+        "CL_TYPE",
+        "CL_PRODUCT_RKO_MARK",
+        "CL_PRODUCT_GAR_MARK",
+        "CL_PRODUCT_LOA_MARK",
+        "CL_PRODUCT_LEA_MARK",
+        "CL_PRODUCT_DEP_MARK",
+        "CL_PRODUCT_ZPP_MARK",
+        "FTS_FLAG",
+        "FTS_COUNTRY_NAME",
+        "FACTORING_MARK",
+        "REVENUE_COMPANY_DM",
+        "REVENUE_GROUP_FINAL",
+        "GROUP_ID",
+        "CITY",
+        "REGION"
+      ],
+      "missing_pct": {
+        "SYNTETIC_U": 0.0,
+        "ORG_TYPE": 36.03,
+        "OKFS_NAME": 36.03,
+        "OGRN_DATE": 36.03,
+        "ECO_MARK_LABEL": 41.41,
+        "MAINOKVED_CODE": 36.06,
+        "MAINOKVED_NAME": 36.06,
+        "NEGATIVEMARK_49": 36.03,
+        "AMOUNT_WORKERS_SPARK": 99.71,
+        "AMOUNT_WORKERS_FNS": 52.21,
+        "CL_TYPE": 36.03,
+        "CL_PRODUCT_RKO_MARK": 36.03,
+        "CL_PRODUCT_GAR_MARK": 36.03,
+        "CL_PRODUCT_LOA_MARK": 36.03,
+        "CL_PRODUCT_LEA_MARK": 36.03,
+        "CL_PRODUCT_DEP_MARK": 36.03,
+        "CL_PRODUCT_ZPP_MARK": 36.03,
+        "FTS_FLAG": 36.03,
+        "FTS_COUNTRY_NAME": 95.06,
+        "FACTORING_MARK": 36.03,
+        "REVENUE_COMPANY_DM": 5.88,
+        "REVENUE_GROUP_FINAL": 5.88,
+        "GROUP_ID": 0.0,
+        "CITY": 8.14,
+        "REGION": 26.98
+      },
+      "ambiguous_group_companies": 0,
+      "unique_companies": 668454,
+      "duplicate_companies": 0,
+      "group_ids": 134988,
+      "multi_company_groups": 70775,
+      "companies_in_multi_company_groups": 564905,
+      "group_size_median": 3.0,
+      "group_size_max": 1581,
+      "group_sentinel_counts": {
+        "": 0,
+        "nan": 0,
+        "0": 0,
+        "-1": 0,
+        "group_NAN": 39336
+      },
+      "multi_group_share_pct": 84.51,
+      "product_value_counts": {
+        "CL_PRODUCT_RKO_MARK": {
+          "": 240841,
+          "0": 238567,
+          "1": 189046
+        },
+        "CL_PRODUCT_GAR_MARK": {
+          "0": 417668,
+          "": 240841,
+          "1": 9945
+        },
+        "CL_PRODUCT_LOA_MARK": {
+          "0": 409972,
+          "": 240841,
+          "1": 17641
+        },
+        "CL_PRODUCT_LEA_MARK": {
+          "0": 362139,
+          "": 240841,
+          "1": 65474
+        },
+        "CL_PRODUCT_DEP_MARK": {
+          "0": 410035,
+          "": 240841,
+          "1": 17578
+        },
+        "CL_PRODUCT_ZPP_MARK": {
+          "0": 329191,
+          "": 240841,
+          "1": 98422
+        },
+        "FACTORING_MARK": {
+          "0": 426852,
+          "": 240841,
+          "1": 761
+        }
+      },
+      "agriculture_companies": 10543,
+      "wholesale_companies": 66258,
+      "top_okved_sections": {
+        "": 241018,
+        "68": 66796,
+        "46": 66258,
+        "47": 25630,
+        "41": 23173,
+        "56": 15519,
+        "71": 13088,
+        "49": 13008,
+        "45": 12264,
+        "43": 11917
+      }
+    },
+    "Fid_Uid_link.csv": {
+      "rows": 206099,
+      "columns": [
+        "SYNTETIC_F",
+        "ANALYSISGRPCITY_NAME",
+        "ANALYSISGRPRC_NAME",
+        "SYNTETIC_U"
+      ],
+      "missing_pct": {
+        "SYNTETIC_F": 0.0,
+        "ANALYSISGRPCITY_NAME": 0.08,
+        "ANALYSISGRPRC_NAME": 0.08,
+        "SYNTETIC_U": 0.0
+      },
+      "unique_people": 100422,
+      "unique_companies": 168103,
+      "people_linked_to_multiple_companies": 40696,
+      "max_companies_per_person": 309,
+      "duplicate_links": 0
+    }
+  },
+  "limitations": [
+    "Роль ЛПР и полномочия не представлены в таблицах связей. Общий физлицо не доказывает общий ЛПР.",
+    "Нет дат платежей, истории входов и показов: нельзя оценить сезонность, реакцию или частоту.",
+    "Нет целевой метки продаж: нельзя обучить склонность или измерить uplift.",
+    "Параметры трёх демонстрационных клиентов синтетические и заданы в шпаргалке."
+  ]
+}

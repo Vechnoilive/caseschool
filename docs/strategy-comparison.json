@@ -1,0 +1,194 @@
+{
+  "scope": "Покрытие 14 приёмочных сценариев ТЗ, а не качество ML и не A/B-эффект",
+  "strategies": [
+    {
+      "name": "Готовые экраны по 3 пресетам",
+      "passed": 3,
+      "total": 14,
+      "results": [
+        {
+          "case": "Клиент 1: группа",
+          "passed": true
+        },
+        {
+          "case": "Клиент 2: письмо",
+          "passed": true
+        },
+        {
+          "case": "Операционист",
+          "passed": false
+        },
+        {
+          "case": "Нет связи группы",
+          "passed": true
+        },
+        {
+          "case": "Неизвестная роль",
+          "passed": false
+        },
+        {
+          "case": "Низкая активность",
+          "passed": false
+        },
+        {
+          "case": "Нет согласия",
+          "passed": false
+        },
+        {
+          "case": "Лимит",
+          "passed": false
+        },
+        {
+          "case": "Два без реакции",
+          "passed": false
+        },
+        {
+          "case": "Нет ёмкости КМ",
+          "passed": false
+        },
+        {
+          "case": "Нулевая ценность",
+          "passed": false
+        },
+        {
+          "case": "Нет истории",
+          "passed": false
+        },
+        {
+          "case": "Вне окна",
+          "passed": false
+        },
+        {
+          "case": "Нет подтверждённого адресата",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "name": "Только отраслевая сегментация",
+      "passed": 2,
+      "total": 14,
+      "results": [
+        {
+          "case": "Клиент 1: группа",
+          "passed": false
+        },
+        {
+          "case": "Клиент 2: письмо",
+          "passed": true
+        },
+        {
+          "case": "Операционист",
+          "passed": false
+        },
+        {
+          "case": "Нет связи группы",
+          "passed": true
+        },
+        {
+          "case": "Неизвестная роль",
+          "passed": false
+        },
+        {
+          "case": "Низкая активность",
+          "passed": false
+        },
+        {
+          "case": "Нет согласия",
+          "passed": false
+        },
+        {
+          "case": "Лимит",
+          "passed": false
+        },
+        {
+          "case": "Два без реакции",
+          "passed": false
+        },
+        {
+          "case": "Нет ёмкости КМ",
+          "passed": false
+        },
+        {
+          "case": "Нулевая ценность",
+          "passed": false
+        },
+        {
+          "case": "Нет истории",
+          "passed": false
+        },
+        {
+          "case": "Вне окна",
+          "passed": false
+        },
+        {
+          "case": "Нет подтверждённого адресата",
+          "passed": false
+        }
+      ]
+    },
+    {
+      "name": "Контекст и таблица правил",
+      "passed": 14,
+      "total": 14,
+      "results": [
+        {
+          "case": "Клиент 1: группа",
+          "passed": true
+        },
+        {
+          "case": "Клиент 2: письмо",
+          "passed": true
+        },
+        {
+          "case": "Операционист",
+          "passed": true
+        },
+        {
+          "case": "Нет связи группы",
+          "passed": true
+        },
+        {
+          "case": "Неизвестная роль",
+          "passed": true
+        },
+        {
+          "case": "Низкая активность",
+          "passed": true
+        },
+        {
+          "case": "Нет согласия",
+          "passed": true
+        },
+        {
+          "case": "Лимит",
+          "passed": true
+        },
+        {
+          "case": "Два без реакции",
+          "passed": true
+        },
+        {
+          "case": "Нет ёмкости КМ",
+          "passed": true
+        },
+        {
+          "case": "Нулевая ценность",
+          "passed": true
+        },
+        {
+          "case": "Нет истории",
+          "passed": true
+        },
+        {
+          "case": "Вне окна",
+          "passed": true
+        },
+        {
+          "case": "Нет подтверждённого адресата",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

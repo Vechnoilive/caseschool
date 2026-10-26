@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ef3124">
+  <meta name="description" content="Прототип Тех 2 команды Рэд флаг №54. Персонализация предложения, роли, канала и цифрового пути корпоративного клиента.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'self'">
+  <title>Рэд флаг · Предложение — тому, кто решает</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="rules.js"></script>
+  <script defer src="dataset-summary.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#result">К предложению</a>
+  <header class="topbar">
+    <a class="brand" href="#prototype" aria-label="Альфа-Будущее — прототип команды"><img src="assets/alfa-future.png" alt="Альфа-Будущее" width="125" height="47"></a>
+    <span class="topbar-divider"></span>
+    <div class="team-name"><b>Рэд флаг<span class="team-number">54</span></b><span>Кейс-школа · финал</span></div>
+    <nav class="main-nav" aria-label="Разделы прототипа">
+      <button class="nav-btn active" data-page="prototype" aria-current="page">Прототип</button>
+      <button class="nav-btn" data-page="data">Данные</button>
+      <button class="nav-btn" data-page="logic">Как это работает</button>
+    </nav>
+    <button class="quiet-btn reset-btn" data-action="reset" title="Начать демонстрацию заново">↻ <span>Сбросить демо</span></button>
+  </header>
+  <main>
+    <section id="prototype-page" class="page-shell">
+      <div class="intro">
+        <div><p class="eyebrow"><span class="live-dot"></span> ТЕХ 2 / ЖИВОЙ ПРОТОТИП</p><h1>Предложение — <span>тому, кто решает.</span></h1><p class="lead">Измените профиль. Посмотрите, что получит клиент и почему.</p></div>
+        <div class="intro-note"><span class="tiny-label">ФОКУС РЕШЕНИЯ</span><strong>Одна группа.<br>Один уместный контакт.</strong><span>С1 · Холдинги среднего бизнеса</span></div>
+      </div>
+      <div class="workspace">
+        <aside class="profile-panel" aria-label="Профиль клиента">
+          <div class="section-label"><span class="step-number">01</span><h2>Кто наш клиент</h2></div>
+          <div id="presets" class="presets" role="group" aria-label="Готовые клиенты"></div>
+          <p id="profile-note" class="profile-note"></p>
+          <form id="profile-form"></form>
+          <details class="advanced" id="conditions"><summary>Условия и ограничения <span>＋</span></summary><div id="context-form"></div><p class="micro">Лимиты и пороги — условные параметры пилота, не политика банка.</p></details>
+          <button class="mobile-jump secondary-btn" data-action="show-result">Посмотреть предложение ↓</button>
+          <p class="profile-footer"><span>◇</span> В основе — действующий скор по юрлицу.<br>Здесь показываем правила поверх него.</p>
+        </aside>
+        <section id="result" class="result-panel" aria-live="polite" aria-atomic="false" tabindex="-1">
+          <div class="result-heading"><div class="section-label"><span class="step-number">02</span><h2>Что получит клиент</h2></div><div class="mode-switch" role="group" aria-label="Сравнение Было Стало"><button data-mode="before" aria-pressed="false">Было</button><button class="selected" data-mode="after" aria-pressed="true">Стало <span>↗</span></button></div></div>
+          <div id="decision-summary"></div>
+          <div id="channel-tabs" class="channel-tabs" role="tablist" aria-label="Посмотреть предложение в канале"></div>
+          <div id="customer-preview" role="tabpanel" aria-label="Превью предложения"></div>
+          <div id="delivery-policy"></div>
+          <div id="why-decision"></div>
+        </section>
+      </div>
+      <div class="under-workspace"><span>Профиль → новые признаки и правила → предложение → действие</span><span>ML-модель не переобучаем в демо</span></div>
+    </section>
+    <section id="data-page" class="page-shell information-page" hidden></section>
+    <section id="logic-page" class="page-shell information-page" hidden></section>
+  </main>
+  <footer class="prototype-label"><span class="flag-mark">⚑</span><span>Прототип команды «Рэд флаг» · данные условные</span><span class="footer-meta">Никаких реальных отправок и банковских операций</span></footer>
+  <dialog id="flow-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript><p class="no-js">Для интерактивного прототипа включите JavaScript. Сайт работает локально, без внешних API.</p></noscript>
+</body>
+</html>
