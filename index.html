@@ -9,9 +9,11 @@
   <title>Рэд флаг · Предложение — тому, кто решает</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="tour.css">
   <script defer src="data.js"></script>
   <script defer src="rules.js"></script>
   <script defer src="dataset-summary.js"></script>
+  <script defer src="tour.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -25,7 +27,10 @@
       <button class="nav-btn" data-page="data">Данные</button>
       <button class="nav-btn" data-page="logic">О решении</button>
     </nav>
-    <button class="quiet-btn reset-btn" data-action="reset" title="Начать демонстрацию заново">↻ <span>Сбросить демо</span></button>
+    <div class="header-actions">
+      <button class="tour-launch" type="button" data-action="start-tour" aria-label="Как пользоваться" title="Пошаговое обучение"><span class="tour-launch-icon" aria-hidden="true">?</span><span class="tour-launch-label">Как пользоваться</span></button>
+      <button class="quiet-btn reset-btn" data-action="reset" title="Начать демонстрацию заново">↻ <span>Сбросить демо</span></button>
+    </div>
   </header>
   <main>
     <section id="prototype-page" class="page-shell">
@@ -56,6 +61,19 @@
   </main>
   <footer class="prototype-label"><span class="flag-mark">⚑</span><span>Прототип команды «Рэд флаг» · данные условные</span></footer>
   <dialog id="flow-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+  <dialog id="tour-dialog" class="tour-dialog" aria-labelledby="tour-title" aria-describedby="tour-text">
+    <div class="tour-shade" aria-hidden="true"></div>
+    <div class="tour-spotlight" aria-hidden="true" hidden></div>
+    <section class="tour-card">
+      <div class="tour-card-heading"><span class="tour-step" id="tour-step" role="status" aria-live="polite" aria-atomic="true"></span><button class="tour-close" type="button" data-tour-action="close" aria-label="Закрыть обучение">×</button></div>
+      <div class="tour-progress" aria-hidden="true"><span id="tour-progress-fill"></span></div>
+      <h2 id="tour-title"></h2>
+      <p id="tour-text"></p>
+      <div class="tour-controls"><button type="button" class="tour-back" data-tour-action="back">← Назад</button><button type="button" class="primary-btn tour-next" data-tour-action="next"></button></div>
+      <button type="button" class="tour-skip" data-tour-action="close">Пропустить обучение</button>
+      <p class="tour-label">Прототип команды «Рэд флаг» · данные условные</p>
+    </section>
+  </dialog>
   <div id="toast" class="toast" role="status" hidden></div>
   <noscript><p class="no-js">Для интерактивного прототипа включите JavaScript. Сайт работает локально, без внешних API.</p></noscript>
 </body>

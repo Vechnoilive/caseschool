@@ -3,16 +3,17 @@
 const D=window.CaseData,R=window.CaseRules,$=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=value=>new Intl.NumberFormat('ru-RU').format(value);
+let training=false,tourSnapshot=null;
 const state={preset:'c1',profile:{...D.presets[0].profile},context:{...D.defaults},mode:'after',channel:null,page:'prototype',modal:null,amount:'30000000',term:'9',purpose:'',startDate:'',submitted:false,helpShown:false,helpVisible:false,startedAt:0,backtracks:0,callbackRequested:false,viewedOffers:new Set()};
 const ledger=R.createLedger();const profileContexts=new Map();let helpTimer=null,toastTimer=null;
-const readSession=()=>{try{return sessionStorage.getItem('redflag-k5-shown')==='1';}catch{return state.helpShown;}};
-const markHelp=()=>{state.helpShown=true;try{sessionStorage.setItem('redflag-k5-shown','1');}catch{}};
+const readSession=()=>{if(training)return state.helpShown;try{return sessionStorage.getItem('redflag-k5-shown')==='1';}catch{return state.helpShown;}};
+const markHelp=()=>{state.helpShown=true;if(training)return;try{sessionStorage.setItem('redflag-k5-shown','1');}catch{}};
 const hasSigningRight=()=>['owner','cfo'].includes(state.profile.role)||(state.profile.role==='unknown'&&state.context.signingRight);
 const context=()=>({...state.context,journey:state.preset==='c3'?'application':undefined,signingRight:hasSigningRight()});
 const decision=()=>R.evaluate(state.profile,context());
 const currentPreset=()=>D.presets.find(p=>p.id===state.preset)||D.presets[0];
 const topicKey=()=>[state.preset,state.profile.structure==='confirmed'?'group':'company',state.profile.industry].join(':');
-function emit(name,payload={}){ledger.emit(name,{at:new Date().toISOString(),preset:state.preset,mode:state.mode,...payload});}
+function emit(name,payload={}){if(!training)ledger.emit(name,{at:new Date().toISOString(),preset:state.preset,mode:state.mode,...payload});}
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,4000);}
 function labelFor(key,value){return D.options[key].find(x=>x[0]===value)?.[1]||value;}
 function field(key,label,index){return `<label class="field"><span class="field-label">${label}</span><select name="${key}" aria-label="${label}">${D.options[key].map(([value,text])=>`<option value="${value}" ${state.profile[key]===value?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;}
@@ -23,7 +24,7 @@ function renderProfile(){
  const checks=[['consent','Есть согласие на коммуникацию'],['refused','Отказ от предложений по теме'],['recipientVerified','Адресат передачи подтверждён'],['kmCapacity','У КМ есть свободная ёмкость'],['history','Есть история оборотов'],['needSignal','Есть сигнал потребности'],['commonNeed','У группы общий ЛПР и одна потребность']];
  $('context-form').innerHTML=checks.map(([key,label])=>`<label class="check-row"><input type="checkbox" data-context="${key}" ${state.context[key]?'checked':''}>${label}</label>`).join('')+[
  ['weeklyContacts','Контактов за неделю',0,2],['groupTopicDaysAgo','Дней с контакта по группе',0,30],['deliveredWithoutReaction','Доставлено без реакции',0,2],['lastUnansweredDaysAgo','Дней после них',0,30],['seasonWeeks','Недель до пика',0,20]
- ].map(([key,label,min,max])=>`<label class="check-row">${label}<input class="context-number" aria-label="${label}" data-context="${key}" type="number" min="${min}" max="${max}" value="${state.context[key]}"></label>`).join('')+`<label class="check-row"><input type="checkbox" data-context="zeroValue" ${state.context.propensity===0?'checked':''}>Ожидаемая ценность контакта ≤ 0</label>${state.profile.role==='unknown'?`<label class="check-row"><input type="checkbox" data-context="signingRight" ${state.context.signingRight?'checked':''}>Право оформить продукт подтверждено</label>`:''}`;
+ ].map(([key,label,min,max])=>`<label class="check-row" data-tour-context="${key}">${label}<input class="context-number" aria-label="${label}" data-context="${key}" type="number" min="${min}" max="${max}" value="${state.context[key]}"></label>`).join('')+`<label class="check-row"><input type="checkbox" data-context="zeroValue" ${state.context.propensity===0?'checked':''}>Ожидаемая ценность контакта ≤ 0</label>${state.profile.role==='unknown'?`<label class="check-row"><input type="checkbox" data-context="signingRight" ${state.context.signingRight?'checked':''}>Право оформить продукт подтверждено</label>`:''}`;
 }
 function buildingIcon(){return '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 21V5h10v16M15 10h4v11M3 21h18M8 8h4M8 12h4M8 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
 function groupVisual(){return `<div class="group-visual" aria-label="Схема группы из пяти условных юридических лиц"><div class="group-top">Один расчёт для группы</div><div class="group-nodes">${[1,2,3,4,5].map(n=>`<div class="group-node">${buildingIcon()}<span>Юрлицо ${n}</span></div>`).join('')}</div></div>`;}
@@ -104,8 +105,9 @@ function openApplication(){
  state.helpVisible=false;state.startedAt=Date.now();state.backtracks=0;state.submitted=false;state.helpShown=readSession();emit('application_started');
  const purposeOptions=[['','Выберите цель'],['working','Оборотные средства'],['season','Сезонные закупки'],['suppliers','Расчёты с поставщиками']];
  dialog('Заявка на финансирование',`<div class="breadcrumbs"><button data-action="application-back">К условиям</button><span>›</span><span>Заявка</span></div><div class="offer-kicker">${state.mode==='before'?'БЫЛО · УСЛОВНО':`${esc(decision().segment)} · ЗАЯВКА НА ФИНАНСИРОВАНИЕ`}</div><h2 id="dialog-title">До отправки — два поля</h2><div id="application-progress" class="application-progress" aria-label="Прогресс заявки"></div><div class="application-meta"><span id="application-progress-text"></span><span>Данные условные</span></div><div class="prefilled-fields"><div>Компания<b>Юрлицо 1 · условно</b></div><div>Продукт<b>Оборотный кредит</b></div><div>Сумма<b>${fmt(Number(state.amount))} ₽ · условно</b></div><div>Срок<b>${esc(state.term)} месяцев · условно</b></div></div><form id="application-form" class="application-form"><label>Цель кредита<select name="purpose" id="purpose" aria-label="Цель кредита" required>${purposeOptions.map(([value,label])=>`<option value="${value}" ${state.purpose===value?'selected':''}>${label}</option>`).join('')}</select></label><label>Планируемая дата получения средств<input type="date" name="startDate" id="start-date" aria-label="Планируемая дата получения средств" value="${esc(state.startDate)}" required></label><div id="help-slot" class="help-slot" aria-live="polite"></div><p id="application-error" class="field-error" hidden></p><div class="button-group"><button class="primary-btn" type="submit">Отправить заявку <span>↗</span></button><button class="quiet-btn" type="button" data-action="close-dialog">Продолжить позже</button></div></form><div class="demo-signals"><span>Сигналы демо</span><button data-action="simulate-pause">Пауза 45 с</button><button data-action="simulate-backtrack">Возврат между вариантами <span id="backtrack-count">0/3</span></button><span class="new-label">Новое · пороги пилота</span></div><p class="micro">${state.mode==='before'?'В условном «было» подсказка в сессии отсутствует.':'К5: помощь после паузы 45 с или 3 возвратов — не чаще раза за сессию. Закрывается одним действием.'}</p>`,'application');
- updateProgress();if(!state.helpShown&&state.mode==='after')helpTimer=setInterval(()=>tryHelp((Date.now()-state.startedAt)/1000),1000);
+ updateProgress();startHelpTimer();
 }
+function startHelpTimer(){clearInterval(helpTimer);if(!training&&state.modal==='application'&&!state.submitted&&!state.helpShown&&state.mode==='after')helpTimer=setInterval(()=>tryHelp((Date.now()-state.startedAt)/1000),1000);}
 function tryHelp(elapsedSeconds,manual=false){
  const shown=state.helpShown||readSession();
  if(R.shouldHelp({view:state.modal,mode:state.mode,role:state.profile.role,signingRight:hasSigningRight(),elapsedSeconds,backtracks:state.backtracks,shown,submitted:state.submitted})&&progress()===0){
@@ -126,6 +128,39 @@ function renderLogic(){
 function setPage(page){state.page=page;['prototype','data','logic'].forEach(p=>$(p+'-page').hidden=p!==page);document.querySelectorAll('[data-page]').forEach(b=>{b.classList.toggle('active',b.dataset.page===page);if(b.dataset.page===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});if(page==='data')renderData();if(page==='logic')renderLogic();}
 function reset(){closeDialog();state.preset='c1';state.profile={...D.presets[0].profile};state.context={...D.defaults};state.mode='after';state.channel=null;state.amount='30000000';state.term='9';state.purpose='';state.startDate='';state.helpShown=false;state.callbackRequested=false;state.viewedOffers.clear();profileContexts.clear();ledger.reset();try{sessionStorage.removeItem('redflag-k5-shown');}catch{}setPage('prototype');render();toast('Демонстрация сброшена. Начинаем с Клиента 1.');}
 function exportEvents(){const text=JSON.stringify({prototype:true,synthetic:true,events:ledger.events},null,2);const blob=new Blob([text],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='redflag-demo-events.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+const tour=window.CaseTour.create({
+ begin(){
+   tourSnapshot={state:{...state,profile:{...state.profile},context:{...state.context},viewedOffers:new Set(state.viewedOffers)},at:Date.now(),scrollX:window.scrollX,scrollY:window.scrollY,conditionsOpen:$('conditions').open,details:Array.from($(state.page+'-page').querySelectorAll('details')).map(el=>el.open),dialogOpen:$('flow-dialog').open,dialogHTML:$('dialog-content').innerHTML,dialogScroll:$('dialog-content').querySelector('.dialog-body')?.scrollTop||0,fields:Array.from($('dialog-content').querySelectorAll('input,select')).map(el=>({id:el.id,value:el.value,checked:el.checked})),focusId:document.activeElement.id,toast:{hidden:$('toast').hidden,text:$('toast').textContent}};
+   training=true;closeDialog();clearTimeout(toastTimer);$('toast').hidden=true;
+ },
+ prepare(id){
+   if(id==='welcome')return;
+   closeDialog();
+   const preset=id==='channels'||id==='calculator'?D.presets[1]:id==='help'?D.presets[2]:D.presets[0];
+   Object.assign(state,{preset:preset.id,profile:{...preset.profile},context:{...D.defaults},mode:id==='comparison'?'before':'after',channel:null,purpose:'',startDate:'',amount:'30000000',term:'9',helpShown:false,helpVisible:false,submitted:false,backtracks:0,callbackRequested:false});
+   if(id==='role')state.profile.role='operator';
+   if(id==='limits')state.context.weeklyContacts=2;
+   $('conditions').open=id==='limits';render();setPage('prototype');
+   if(id==='calculator')openCalculator(decision());
+   if(id==='help'){openApplication();tryHelp(45);}
+ },
+ end(){
+   const saved=tourSnapshot;if(!saved)return null;
+   closeDialog();Object.assign(state,saved.state);
+   if(state.modal==='application')state.startedAt+=Date.now()-saved.at;
+   render();setPage(state.page);$('conditions').open=saved.conditionsOpen;
+   $(state.page+'-page').querySelectorAll('details').forEach((el,i)=>{el.open=!!saved.details[i];});
+   if(saved.dialogOpen){
+     $('dialog-content').innerHTML=saved.dialogHTML;
+     saved.fields.forEach(field=>{const el=document.getElementById(field.id);if(el){el.value=field.value;el.checked=field.checked;}});
+     $('flow-dialog').showModal();const body=$('dialog-content').querySelector('.dialog-body');if(body)body.scrollTop=saved.dialogScroll;
+   }
+   $('toast').textContent=saved.toast.text;$('toast').hidden=saved.toast.hidden;
+   if(!saved.toast.hidden)toastTimer=setTimeout(()=>$('toast').hidden=true,4000);
+   training=false;startHelpTimer();window.scrollTo({left:saved.scrollX,top:saved.scrollY,behavior:'instant'});tourSnapshot=null;
+   return saved.dialogOpen?document.getElementById(saved.focusId)||$('flow-dialog').querySelector('button'):null;
+ }
+});
 document.addEventListener('click',event=>{
  if(event.target.closest('a.brand')){event.preventDefault();setPage('prototype');window.scrollTo({top:0,behavior:'smooth'});return;}
  const b=event.target.closest('button');if(!b||b.disabled)return;
@@ -134,6 +169,7 @@ document.addEventListener('click',event=>{
  if(b.dataset.channel){state.channel=b.dataset.channel;renderDecision();return;}
  if(b.dataset.page){setPage(b.dataset.page);return;}
  const action=b.dataset.action;
+ if(action==='start-tour')tour.start();
  if(action==='reset')reset();
  if(action==='close-dialog')closeDialog();
  if(action==='open-offer')openOffer();
@@ -178,5 +214,5 @@ $('flow-dialog').addEventListener('submit',e=>{
   success(fresh?'Заявка сохранена в демо':'Заявка уже сохранена','Клиент завершил путь от предложения до заявки. Данные не переданы в банк; кредит не оформлен.',`<div class="next-step">${fmt(Number(state.amount))} ₽ · ${state.term} месяцев · условно<span>Сделка и выдача будут измеряться отдельно от заявки</span></div>`);
  }
 });
-render();setPage('prototype');
+render();setPage('prototype');tour.offer();
 })();
