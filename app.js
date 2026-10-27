@@ -8,8 +8,9 @@ const state={preset:'c1',profile:{...D.presets[0].profile},context:{...D.default
 const ledger=R.createLedger();const profileContexts=new Map();
 const journeys=J.createStore();let trainingJourneys=J.createStore();
 const demoSessionId='demo-session-'+Date.now().toString(36);
-const activeDraft=()=> (training?trainingJourneys:journeys).get(topicKey());
-function beginDraft(){const result=(training?trainingJourneys:journeys).ensure(topicKey());if(result.created)emit('journey_started');return result.draft;}
+const draftKey=()=>state.mode+':'+topicKey();
+const activeDraft=()=> (training?trainingJourneys:journeys).get(draftKey());
+function beginDraft(){const result=(training?trainingJourneys:journeys).ensure(draftKey());if(result.created)emit('journey_started');return result.draft;}
 function saveDraft(){const draft=activeDraft();if(draft)Object.assign(draft,{purpose:state.purpose,startDate:state.startDate,amount:state.amount,term:state.term});}
 let helpTimer=null,toastTimer=null;
 const readSession=()=>{if(training)return state.helpShown;try{return sessionStorage.getItem('redflag-k5-shown')==='1';}catch{return state.helpShown;}};
@@ -42,6 +43,7 @@ function groupVisual(){return `<div class="group-visual" aria-label="Схема 
 function visual(s){
  if(s.visual==='group')return groupVisual();
  if(s.visual==='season')return `<div class="season-visual"><div class="season-icon"><span>НЕДЕЛЬ</span><b>${state.context.seasonWeeks}</b></div><div class="season-info"><b>${esc(s.seasonName)}</b><span>До пика закупок</span></div><div class="season-amount"><b>30 млн ₽</b><span>на 9 месяцев · условно</span></div></div>`;
+ if(s.visual==='forward')return `<div class="neutral-visual">${buildingIcon()}<span>Заявку оформляет руководитель с правом подписи</span></div>`;
  if(s.visual==='progress'){const draft=activeDraft();const n=draft?Number(Boolean(draft.purpose))+Number(Boolean(draft.startDate)):0;return `<div class="application-hero"><div class="mini-progress" aria-label="${4+n} из 6 полей заполнены">${Array.from({length:6},(_,i)=>`<span class="${i<4+n?'done':''}"></span>`).join('')}</div><div class="mini-progress-text">${4+n} из 6 полей заполнены · условно</div></div>`;}
  return `<div class="neutral-visual">${buildingIcon()}<span>${s.fallback?'Расчёт по отдельному юрлицу':'Сумма и срок — в калькуляторе'}</span></div>`;
 }
@@ -72,6 +74,7 @@ function renderDecision(){
  $('channel-tabs').innerHTML=s.blocked?'':employee?'<button class="channel-tab active" role="tab" aria-selected="true" data-channel="banner">Интернет-банк · сотрудник</button>':s.channelIds.map((id,i)=>`<button class="channel-tab ${state.channel===id?'active':''}" role="tab" aria-selected="${state.channel===id}" data-channel="${id}"><span class="priority-index">${i+1}</span>${esc(R.channels[id])}</button>`).join('');
  if(s.blocked)$('customer-preview').innerHTML=`<div class="blocked-state"><div class="blocked-icon">Ⅱ</div><span class="tiny-label">${esc(s.blockCode)} · КОНТАКТ ПРИОСТАНОВЛЕН</span><h3>Сейчас не отправляем</h3><p>${esc(s.reason)}</p><div class="button-group"><button class="secondary-btn" data-action="show-conditions">Проверить условия</button>${state.preset==='c3'&&hasSigningRight()?'<button class="secondary-btn" data-action="continue-existing">Продолжить начатую заявку</button>':''}</div>${state.preset==='c3'&&hasSigningRight()?'<p class="micro">Ограничение касается рассылок. Начатую заявку и помощь в сессии можно продолжить.</p>':''}</div>`;
  else if(s.visual==='progress'&&s.action==='clarify')$('customer-preview').innerHTML=clientWindow('manager',s);
+ else if(s.visual==='progress'&&s.action==='forward')$('customer-preview').innerHTML=clientWindow('banner',{...s,title:'Передайте начатую заявку руководителю',copyUnavailable:true,presentation:'У вас нет права оформить кредит. Передайте руководителю предложение и контекст начатой заявки.',visual:'forward'});
  else if(s.visual==='progress'&&state.channel!=='session')$('customer-preview').innerHTML=`<div class="client-window"><div class="client-topline"><div class="client-brand"><span class="alpha-icon">А</span>${state.channel==='callback'?'Связь с менеджером':'Напоминание в тот же день'}</div><span class="client-location">Превью механики · условно</span></div><div class="preview-body"><h3>${state.channel==='callback'?'Продолжим с того же места':'Вернуться к начатой заявке'}</h3><p class="offer-copy">${state.channel==='callback'?'При затруднении клиент может запросить звонок из открытой формы. Контекст заявки сохраняется.':'После ухода можно вернуться к тому же черновику. Напоминание входит в общий лимит контактов.'}</p>${visual(s)}<p class="product-note">${state.channel==='callback'?'Кнопка звонка доступна в помощи по сигналу К5.':'Напоминание после ухода не заменяет помощь в сессии.'}</p><button class="primary-btn" data-action="open-offer">Открыть начатую заявку <span>↗</span></button></div></div>`;
  else if(s.visual==='progress')$('customer-preview').innerHTML=`<div class="client-window"><div class="client-topline"><div class="client-brand"><span class="alpha-icon">А</span>Альфа-Бизнес Онлайн</div><span class="client-location">Начатая заявка</span></div><div class="preview-body"><div class="offer-kicker">Гипотеза Г4 · помощь в заявке</div><h3>${activeDraft()?.submittedAt!=null?'Заявка сохранена в демо':activeDraft()?.purpose&&activeDraft()?.startDate?'Заявка готова к отправке':activeDraft()?.purpose||activeDraft()?.startDate?'Заявка уже начата.<br>Осталось одно поле.':'Заявка уже начата.<br>Осталось два поля.'}</h3><p class="offer-copy">Продолжите с сохранёнными данными компании.</p>${visual(s)}<button class="primary-btn" data-action="open-offer">Открыть начатую заявку <span>↗</span></button></div></div>`;
  else $('customer-preview').innerHTML=clientWindow(state.channel,s);
@@ -107,7 +110,8 @@ function createManagerTask(s=decision(),clarify=false){
  success(t.created?'Создана одна задача КМ':'Такая задача КМ уже есть',clarify?'Уточнить роль и полномочия по этому юрлицу. Неподтверждённому человеку предложение не пересылаем.':s.group?'Контекст сохранён: пять юрлиц, опт стройматериалов, расчёт для группы. Менеджер уточнит ЛПР и заёмщиков.':'Контекст потребности передан менеджеру. Уточнить условия и продолжить с клиентом.',`<div class="next-step">${t.created?'Новая задача':'Повтор не создаёт дубликат'} · Л3<span>Имитация в прототипе, без обращения в CRM банка</span></div>`);
 }
 function openCalculator(s=decision(),isBaseline=false){
- const seasonal=s.season&&!isBaseline;const resuming=activeDraft()?.startedAt!=null;const amount=seasonal||resuming?state.amount:'';const term=seasonal||resuming?state.term:'';
+ if(isBaseline)s=R.baseline(state.profile,context());
+ const seasonal=s.season&&!isBaseline;const draft=activeDraft();const resuming=draft?.startedAt!=null;const amount=resuming?draft.amount:seasonal?'30000000':'';const term=resuming?draft.term:seasonal?'9':'';
  dialog('Условия финансирования',`<div class="breadcrumbs"><button data-action="close-dialog">Предложение</button><span>›</span><span>Калькулятор</span></div><div class="offer-kicker">${isBaseline?'БЫЛО · УСЛОВНО':`${s.segment.startsWith('С')?'Сегмент ':''}${esc(s.segment)} · ${esc(labelFor('industry',state.profile.industry))}`}</div><h2 id="dialog-title">${seasonal&&s.subject?esc(s.subject):esc(s.product)}</h2>${resuming?'<p>Проверьте сумму и срок. Черновик заявки сохранён.</p>':!isBaseline&&s.fullText?`<p data-canonical-copy>${esc(s.fullText)}</p>`:'<p>Общий калькулятор: сумма и срок не заполнены. Это условное сравнение с текущим маршрутом.</p>'}<form id="calculator-form" class="calculator"><h3>${resuming?'Условия вашей заявки':seasonal?'Сумма и срок уже в калькуляторе':'Рассчитайте условия'}</h3><div class="calculator-grid"><label>Сумма, ₽<input name="amount" id="loan-amount" aria-label="Сумма кредита" type="number" min="1" max="1000000000" step="1" value="${esc(amount)}" placeholder="Введите сумму" required></label><label>Срок, месяцев<input name="term" id="loan-term" aria-label="Срок кредита в месяцах" type="number" min="1" max="60" value="${esc(term)}" placeholder="Введите срок" required></label></div><p class="micro">${seasonal?'30 млн ₽ на 9 месяцев — условный пример. ':'Все условия демонстрационные. '}Ставку не показываем. Это не кредитное предложение банка.</p><p id="calculator-error" class="field-error" hidden></p><br><button class="primary-btn" type="submit">Продолжить к заявке <span>↗</span></button></form>`,isBaseline?'baseline-calculator':'calculator');
 }
 function progress(){return Number(Boolean(state.purpose))+Number(Boolean(state.startDate));}
@@ -126,7 +130,7 @@ function updateProgress(){
 }
 function openApplication(){
  if(!hasSigningRight()){const s=decision();s.action=state.context.recipientVerified?'forward':'clarify';if(s.action==='forward')forwardOffer(s);else createManagerTask(s,true);return;}
- beginDraft();const opened=(training?trainingJourneys:journeys).open(topicKey());const draft=opened.draft;
+ beginDraft();const opened=(training?trainingJourneys:journeys).open(draftKey());const draft=opened.draft;
  Object.assign(state,{purpose:draft.purpose,startDate:draft.startDate,amount:draft.amount,term:draft.term,helpVisible:false,startedAt:Date.now(),backtracks:draft.backtracks,submitted:draft.submittedAt!==null,helpShown:readSession(),callbackRequested:draft.callbackRequested});
  if(state.submitted){success('Заявка уже сохранена','Этот черновик уже отправлен в демо. Повторная заявка не создаётся.');return;}
  emit(opened.started?'application_started':'application_resumed',{filled_fields:4+progress()});
@@ -259,7 +263,7 @@ $('flow-dialog').addEventListener('submit',e=>{
   state.purpose=form.elements.purpose.value;state.startDate=form.elements.startDate.value;
   if(!hasSigningRight()){toast('Для отправки нужны подтверждённые полномочия.');return;}
   if(!state.purpose||!state.startDate){$('application-error').textContent='Укажите цель кредита и планируемую дату.';$('application-error').hidden=false;return;}
-  saveDraft();state.submitted=true;clearInterval(helpTimer);const draft=activeDraft();const fresh=(training?trainingJourneys:journeys).submit(topicKey());if(fresh)emit('application_submitted',{helpSeen:draft.helpSeen,callback:draft.callbackRequested,duration_ms:draft.submittedAt-draft.startedAt});
+  saveDraft();state.submitted=true;clearInterval(helpTimer);const draft=activeDraft();const fresh=(training?trainingJourneys:journeys).submit(draftKey());if(fresh)emit('application_submitted',{helpSeen:draft.helpSeen,callback:draft.callbackRequested,duration_ms:draft.submittedAt-draft.startedAt});
   success(fresh?'Заявка сохранена в демо':'Заявка уже сохранена','Клиент завершил путь от предложения до заявки. Данные не переданы в банк; кредит не оформлен.',`<div class="next-step">${fmt(Number(state.amount))} ₽ · ${state.term} месяцев · условно<span>Сделка и выдача будут измеряться отдельно от заявки</span></div>`);
  }
 });
