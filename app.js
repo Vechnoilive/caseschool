@@ -19,7 +19,12 @@ const context=()=>({...state.context,journey:state.preset==='c3'?'application':u
 const decision=()=>R.evaluate(state.profile,context());
 const currentPreset=()=>D.presets.find(p=>p.id===state.preset)||D.presets[0];
 const topicKey=()=>[state.preset,state.profile.structure==='confirmed'?'group':'company',state.profile.industry].join(':');
-function emit(name,payload={}){if(!training){const draft=activeDraft();ledger.emit(name,{at:new Date().toISOString(),session_id:demoSessionId,company_id:'demo-company-'+state.preset,preset:state.preset,mode:state.mode,...(draft?{application_id:draft.id}:{}),...payload});}}
+function emit(name,payload={}){
+ if(training)return;
+ const draft=activeDraft();
+ const timestamp=name==='journey_started'?draft?.routeStartedAt:name==='application_started'?draft?.startedAt:name==='application_submitted'?draft?.submittedAt:undefined;
+ ledger.emit(name,{at:new Date(timestamp??Date.now()).toISOString(),session_id:demoSessionId,company_id:'demo-company-'+state.preset,preset:state.preset,mode:state.mode,...(draft?{application_id:draft.id}:{}),...payload});
+}
 function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,4000);}
 function labelFor(key,value){return D.options[key].find(x=>x[0]===value)?.[1]||value;}
 function field(key,label,index){return `<label class="field"><span class="field-label">${label}</span><select name="${key}" aria-label="${label}">${D.options[key].map(([value,text])=>`<option value="${value}" ${state.profile[key]===value?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;}
