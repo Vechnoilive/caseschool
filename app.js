@@ -177,7 +177,7 @@ const tour=window.CaseTour.create({
  },
  end(){
    const saved=tourSnapshot;if(!saved)return null;
-   closeDialog();Object.assign(state,saved.state);
+   closeDialog();Object.assign(state,saved.state);training=false;
    if(state.modal==='application')state.startedAt+=Date.now()-saved.at;
    render();setPage(state.page);$('conditions').open=saved.conditionsOpen;
    $(state.page+'-page').querySelectorAll('details').forEach((el,i)=>{el.open=!!saved.details[i];});
@@ -188,7 +188,7 @@ const tour=window.CaseTour.create({
    }
    $('toast').textContent=saved.toast.text;$('toast').hidden=saved.toast.hidden;
    if(!saved.toast.hidden)toastTimer=setTimeout(()=>$('toast').hidden=true,4000);
-   training=false;startHelpTimer();window.scrollTo({left:saved.scrollX,top:saved.scrollY,behavior:'instant'});tourSnapshot=null;
+   startHelpTimer();window.scrollTo({left:saved.scrollX,top:saved.scrollY,behavior:'instant'});tourSnapshot=null;
    return saved.dialogOpen?document.getElementById(saved.focusId)||$('flow-dialog').querySelector('button'):null;
  }
 });
