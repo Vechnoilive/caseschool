@@ -10,3 +10,4 @@ private-reference/
 .DS_Store
 
 dist/
+__pycache__/

@@ -15,3 +15,12 @@ jobs:
       - run: node scripts/compare-strategies.cjs
       - run: node scripts/check-static.cjs
       - run: npm run build
+  data-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pandas==2.2.3
+      - run: python -m unittest discover -s tests -p 'test_*.py'
