@@ -4,7 +4,7 @@ test('Клиент 1 — один расчёт на группу, точный �
 test('Клиент 2 — точный текст письма и сезон',()=>{let s=R.evaluate(p(1));assert.equal(s.fullText,D.copy.seasonBody);assert.equal(s.subject,D.copy.seasonSubject);assert.equal(s.channelIds[0],'email');assert.equal(s.visual,'season');});
 test('Операционист не может оформить кредит',()=>{let s=R.evaluate({...p(0),role:'operator'});assert.equal(s.cta,'Отправить руководителю');assert.equal(s.fullText,D.copy.groupOperator);assert.ok(s.codes.includes('К3'));});
 test('Неподтверждённая группа не получает групповую сумму и оффер',()=>{let s=R.evaluate({...p(0),structure:'unconfirmed'});assert.equal(s.group,false);assert.ok(s.codes.includes('Ф2'));assert.notEqual(s.visual,'group');});
-test('Неизвестная роль не выводится из подписи',()=>{let s=R.evaluate({...p(0),role:'unknown'},{signingRight:true});assert.equal(s.group,false);assert.equal(s.target,'Пользователь с правом на действие');assert.ok(s.codes.includes('Ф2'));});
+test('Неизвестная роль не выводится из подписи',()=>{let s=R.evaluate({...p(0),role:'unknown'},{signingRight:true});assert.equal(s.group,false);assert.equal(s.target,'Тот, у кого есть права на действие');assert.ok(s.codes.includes('Ф2'));});
 test('Низкая активность — КМ первым, альтернативы сохранены',()=>{let s=R.evaluate({...p(1),activity:'low'});assert.equal(s.channelIds[0],'manager');assert.ok(s.channelIds.includes('email'));});
 test('Отказ и отсутствие согласия блокируют отправку',()=>{for(const c of [{consent:false},{refused:true},{stopFactor:true}]){let s=R.evaluate(p(0),c);assert.equal(s.blocked,true);assert.equal(s.blockCode,'Ф1');}});
 test('Лимит и тема группы',()=>{for(const c of [{weeklyContacts:2},{groupTopicDaysAgo:2}]){let s=R.evaluate(p(0),c);assert.equal(s.blocked,true);assert.equal(s.blockCode,'Л1');}});
@@ -16,9 +16,25 @@ test('Получатель должен быть подтверждён',()=>{as
 test('Нет ёмкости КМ — не создаём первичную задачу',()=>{let s=R.evaluate({...p(1),activity:'low'},{kmCapacity:false});assert.equal(s.blocked,true);assert.equal(s.blockCode,'Л3');});
 test('К5 только по триггеру, с правом, один раз и в открытой форме',()=>{const base={view:'application',elapsedSeconds:45};assert.equal(R.shouldHelp(base),true);for(const extra of [{elapsedSeconds:44},{shown:true},{submitted:true},{view:'offer'},{mode:'before'},{role:'operator'},{signingRight:false}])assert.equal(R.shouldHelp({...base,...extra}),false);assert.equal(R.shouldHelp({...base,elapsedSeconds:0,backtracks:3}),true);});
 test('Идемпотентность контактов и задач',()=>{const l=R.createLedger();assert.equal(l.contact('x'),true);assert.equal(l.contact('x'),false);assert.equal(l.task('x',{a:1}).created,true);assert.equal(l.task('x',{a:2}).created,false);});
-test('Все 72 сочетания профиля вычисляются и сохраняют ограничения',()=>{let n=0;for(const [industry] of D.options.industry)for(const [role] of D.options.role)for(const [structure] of D.options.structure)for(const [activity] of D.options.activity){const s=R.evaluate({industry,role,structure,activity});assert.ok(s.product);assert.ok(s.channelIds.length);assert.ok(s.frequency);assert.equal(new Set(s.channelIds).size,s.channelIds.length);if(role==='operator')assert.equal(s.action,'forward');n++;}assert.equal(n,72);});
+test('Все 72 сочетания профиля вычисляются и сохраняют ограничения',()=>{let n=0;for(const [industry] of D.options.industry)for(const [role] of D.options.role)for(const [structure] of D.options.structure)for(const [activity] of D.options.activity){const s=R.evaluate({industry,role,structure,activity});assert.ok(s.product);assert.ok(s.channelIds.length);assert.ok(s.frequency);assert.equal(new Set(s.channelIds).size,s.channelIds.length);if(role==='operator')assert.equal(s.action,'forward');if(role==='unknown'){assert.equal(s.action,'clarify');assert.equal(s.channelIds[0],'manager');}n++;}assert.equal(n,72);});
 test('Неизвестные и нечисловые входы отклоняются',()=>{assert.throws(()=>R.evaluate({...p(0),role:'admin'}));assert.throws(()=>R.evaluate(p(0),{weeklyContacts:NaN}));assert.throws(()=>R.evaluate(p(0),{propensity:2}));});
 test('Тексты совпадают с независимо извлечённой шпаргалкой',()=>{const fixture=require('./canonical-copy.json');assert.deepEqual(D.copy,fixture.copy);});
 test('К3 остаётся безопасным в сценарии К5 при неизвестном адресате',()=>{const s=R.evaluate({...p(2),role:'operator'},{journey:'application',recipientVerified:false});assert.equal(s.action,'clarify');});
 test('Частота С1 строже общего 7-дневного лимита',()=>{assert.equal(R.evaluate(p(0),{groupTopicDaysAgo:10}).blockCode,'Л1');assert.equal(R.evaluate(p(0),{groupTopicDaysAgo:14}).blocked,false);});
 test('При Ф2 подача не обещает выгоду неподтверждённой группе',()=>{const s=R.evaluate({...p(0),structure:'unconfirmed'});assert.equal(s.group,false);assert.ok(!s.presentation.includes('группы'));});
+
+ test('Неизвестную роль уточняет КМ, право подписи не превращает её в собственника',()=>{
+  for(const signingRight of [true,false])for(const journey of [undefined,'application']){
+   const s=R.evaluate({...p(0),role:'unknown'},{signingRight,journey});
+   assert.equal(s.target,'Тот, у кого есть права на действие');assert.equal(s.channelIds[0],'manager');assert.equal(s.action,'clarify');
+  }
+ });
+ test('Было: сезонный клиент и открытая заявка имеют разные маршруты',()=>{
+  const season=R.baseline(p(1));assert.equal(season.kind,'season');assert.equal(season.fullText,D.copy.beforeSeason);assert.match(season.frequency,/Каждый месяц/);
+  const application=R.baseline(p(2),{journey:'application'});assert.equal(application.kind,'application');assert.equal(application.count,1);assert.match(application.frequency,/после ухода/);assert.doesNotMatch(application.product,/юрлицу/);
+ });
+ test('К5 помогает с одним оставшимся полем, но не после заполнения или в скрытой вкладке',()=>{
+  const s={view:'application',elapsedSeconds:45};assert.equal(R.shouldHelp({...s,remainingFields:1}),true);
+  for(const extra of [{remainingFields:0},{remainingFields:3},{visible:false}])assert.equal(R.shouldHelp({...s,...extra}),false);
+  assert.equal(R.helpCopy(2),D.copy.help);assert.match(R.helpCopy(1),/^Осталось 1 поле/);assert.equal(R.helpCopy(0),'');
+ });

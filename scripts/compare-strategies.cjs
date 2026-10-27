@@ -9,7 +9,7 @@ const cases=[
  ['Клиент 2: письмо',profile(1),{},s=>s.channelIds[0]==='email'&&s.fullText===D.copy.seasonBody],
  ['Операционист', {...profile(0),role:'operator'},{},s=>s.action==='forward'],
  ['Нет связи группы',{...profile(0),structure:'unconfirmed'},{},s=>!s.group],
- ['Неизвестная роль',{...profile(0),role:'unknown'},{},s=>s.action==='forward'&&!s.group],
+ ['Неизвестная роль',{...profile(0),role:'unknown'},{},s=>s.action==='clarify'&&!s.group&&s.channelIds[0]==='manager'],
  ['Низкая активность',{...profile(1),activity:'low'},{},s=>s.channelIds[0]==='manager'],
  ['Нет согласия',profile(0),{consent:false},s=>s.blocked],
  ['Лимит',profile(0),{weeklyContacts:2},s=>s.blocked],
