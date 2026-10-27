@@ -1,0 +1,16 @@
+{
+  "source": "Правка_вкладки_Данные_для_техника.patch",
+  "approvedBy": "Михаил, 27.10.2026 19:45 МСК",
+  "scope": "Агрегаты для финальной версии сайта и презентации. CSV в этой правке повторно не анализировались. docs/dataset-report.json сохраняет историческую версию выгрузки.",
+  "summary": {
+    "companyRows": 669838,
+    "uniqueCompanies": 428697,
+    "duplicateIdRows": 241141,
+    "analysisCompanies": 428696,
+    "paymentRows": 2368387,
+    "peopleRows": 208154,
+    "uniquePeople": 101398,
+    "multiCompanyGroups": 40233,
+    "companiesInGroups": 345121
+  }
+}

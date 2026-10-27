@@ -1,15 +1,16 @@
 window.DatasetSummary = Object.freeze({
-  "companyRows": 85525,
-  "uniqueCompanies": 85514,
-  "duplicateIdRows": 11,
-  "analysisCompanies": 85513,
+  "companyRows": 669838,
+  "uniqueCompanies": 428697,
+  "duplicateIdRows": 241141,
+  "analysisCompanies": 428696,
   "excludedCompanies": 1,
-  "paymentRows": 1380585,
-  "peopleRows": 12514,
-  "uniquePeople": 11120,
-  "multiCompanyGroups": 5228,
-  "companiesInGroups": 72650,
+  "paymentRows": 2368387,
+  "peopleRows": 208154,
+  "uniquePeople": 101398,
+  "multiCompanyGroups": 40233,
+  "companiesInGroups": 345121,
   "missingRoles": true,
   "missingActivity": true,
   "missingDates": true
 });
+
