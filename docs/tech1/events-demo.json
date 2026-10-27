@@ -1,0 +1,188 @@
+{
+  "prototype": true,
+  "synthetic": true,
+  "events": [
+    {
+      "name": "offer_view",
+      "at": "2026-10-27T16:33:08.439Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c1",
+      "preset": "c1",
+      "mode": "after",
+      "rules": [
+        "К1",
+        "К2",
+        "К4",
+        "Л3"
+      ],
+      "channel": "boss"
+    },
+    {
+      "name": "offer_view",
+      "at": "2026-10-27T16:33:09.473Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "rules": [
+        "К4",
+        "К5"
+      ],
+      "channel": "session"
+    },
+    {
+      "name": "offer_click",
+      "at": "2026-10-27T16:33:10.495Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "rules": [
+        "К4",
+        "К5"
+      ],
+      "channel": "session"
+    },
+    {
+      "name": "journey_started",
+      "at": "2026-10-27T16:33:10.495Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1"
+    },
+    {
+      "name": "application_started",
+      "at": "2026-10-27T16:33:10.495Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "filled_fields": 4
+    },
+    {
+      "name": "demo_pause_simulated",
+      "at": "2026-10-27T16:33:16.202Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1"
+    },
+    {
+      "name": "help_shown",
+      "at": "2026-10-27T16:33:16.202Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "trigger": "pause",
+      "threshold": 45,
+      "simulated": true,
+      "remaining_fields": 2
+    },
+    {
+      "name": "callback_requested",
+      "at": "2026-10-27T16:33:23.268Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "remaining_fields": 2
+    },
+    {
+      "name": "application_field_changed",
+      "at": "2026-10-27T16:33:35.399Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "field": "purpose",
+      "filled_fields": 5
+    },
+    {
+      "name": "application_field_changed",
+      "at": "2026-10-27T16:33:35.423Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "field": "startDate",
+      "filled_fields": 6
+    },
+    {
+      "name": "help_resolved",
+      "at": "2026-10-27T16:33:35.423Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1"
+    },
+    {
+      "name": "application_paused",
+      "at": "2026-10-27T16:33:36.482Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1"
+    },
+    {
+      "name": "offer_click",
+      "at": "2026-10-27T16:33:39.535Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "rules": [
+        "К4",
+        "К5"
+      ],
+      "channel": "session"
+    },
+    {
+      "name": "application_resumed",
+      "at": "2026-10-27T16:33:39.535Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "filled_fields": 6
+    },
+    {
+      "name": "application_submitted",
+      "at": "2026-10-27T16:34:07.077Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "helpSeen": true,
+      "callback": true,
+      "duration_ms": 56582
+    },
+    {
+      "name": "offer_click",
+      "at": "2026-10-27T16:34:12.955Z",
+      "session_id": "demo-session-mvqwmjj8",
+      "company_id": "demo-company-c3",
+      "preset": "c3",
+      "mode": "after",
+      "application_id": "demo-application-1",
+      "rules": [
+        "К4",
+        "К5"
+      ],
+      "channel": "session"
+    }
+  ]
+}
